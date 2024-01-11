@@ -1,0 +1,8 @@
+main.c:104:5:main	5
+main.c:190:6:SystemClock_Config	3
+main.c:242:6:SendMessage	4
+main.c:260:6:ReadSensor	1
+main.c:279:6:HAL_TIM_PeriodElapsedCallback	3
+main.c:292:6:HAL_CAN_RxFifo0MsgPendingCallback	2
+main.c:299:6:CAN_Filter_Config	1
+main.c:326:6:Error_Handler	1

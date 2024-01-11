@@ -56,10 +56,10 @@ CAN_TxHeaderTypeDef txHeader;
 uint8_t CanTxBuffer[8]; //Buffer escritura
 uint8_t CanRxBuffer[8]; //Buffer lectura
 uint32_t CanMailBox; //Para enviar
-uint8_t flag_rx = 0, tx_complete = 0, tx_retry = 0; // banderas
+uint8_t flag_rx = 0, tx_complete = 0, tx_retry = 0, read_complete = 0; // banderas
 uint8_t counterTime = 5; // contador tiempo
 uint8_t WorkMode = BROADCAST_MODE; // por default va a trabajar en broadcast mode
-uint8_t CycleTime = 10; //Cada cuanto envia los datos en broadcast mode, por default 10ms
+uint8_t CycleTime = 10, CycleSensor = 5; //Cada cuanto envia los datos en broadcast mode, por default 10ms
 uint8_t valueCycleTime = 10;
 uint8_t SensorData[8]; //Buffer Sensor
 uint16_t ChangeValueSensorTime = 2000;
@@ -77,6 +77,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 void SendMessage();
 void ChangeValueSensorData();
+void ReadSensor();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -136,7 +137,7 @@ int main(void)
   txHeader.IDE = CAN_ID_STD;
   txHeader.RTR = CAN_RTR_DATA;
   txHeader.StdId = id_tx; // DIRECCION A RESPONDER
-
+/*
   SensorData[0] = 0x80;	//right			H		0x80 = 1000 0000 0000 0000
   SensorData[1] = 0;	//right			L
   SensorData[2] = 0;	//middle		H		0000 0000
@@ -145,7 +146,10 @@ int main(void)
   SensorData[5] = 0;	//left			L
   SensorData[6] = 0x03;	//cell state	H		 0000 011
   SensorData[7] = 0x80;	//cell state	L		1000 0000
+*/
 
+  //Para simular el envio de los estados de los sensores, definimos usar el byte 07 para los 4 sensores de la derecha (sensores 0,1,2,3)
+  //y el byte 08 para los 4 de la izquierda (sensores 4,5,6,7)
 
   /* USER CODE END 2 */
 
@@ -156,6 +160,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	 if(!CycleSensor){
+		 ReadSensor();
+	 }
 
 	 if(!CycleTime || tx_retry){
 		 SendMessage();
@@ -165,12 +172,13 @@ int main(void)
 		 //ChangeValueSensorData();
 		 tx_complete = 0;
 	 }
+	 /*
 	 if(!ChangeValueSensorTime){
 		 ChangeValueSensorData();
 		 HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 		 HAL_GPIO_TogglePin(LED_ONBOARD_GPIO_Port, LED_ONBOARD_Pin);
 		 ChangeValueSensorTime = 2000;
-	 }
+	 }*/
   }
   /* USER CODE END 3 */
 }
@@ -216,6 +224,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+/* FUNCION PARA SIMULAR SENSORES
 void ChangeValueSensorData(){
 	if (SensorData[3] <= 254){
 		SensorData[3] += 1;
@@ -229,7 +238,7 @@ void ChangeValueSensorData(){
 	}
 
 }
-
+*/
 void SendMessage(){
 	for (uint8_t i = 0; i<8; i++)
 		CanTxBuffer[i] = SensorData[i];
@@ -238,6 +247,7 @@ void SendMessage(){
 	if(HAL_CAN_IsTxMessagePending(&hcan, CanMailBox) == 0){
 		if (HAL_CAN_AddTxMessage(&hcan, &txHeader, CanTxBuffer, &CanMailBox) == HAL_OK){
 			tx_complete = 1;
+			read_complete = 0;
 			tx_retry = 0;
 		}
 		else
@@ -247,13 +257,36 @@ void SendMessage(){
 		tx_retry = 1;
 }
 
+void ReadSensor(){
+
+	SensorData[6] = 0;
+	SensorData[7] = 0;
+
+	SensorData[6] |= HAL_GPIO_ReadPin(SENSOR_0_GPIO_Port, SENSOR_0_Pin);//enviamos el estado del sensor 0 en el bit 0
+	SensorData[6] |= (HAL_GPIO_ReadPin(SENSOR_1_GPIO_Port, SENSOR_1_Pin)<<1);//enviamos el estado del sensor 1 en el bit 1
+	SensorData[6] |= (HAL_GPIO_ReadPin(SENSOR_2_GPIO_Port, SENSOR_2_Pin)<<2);//enviamos el estado del sensor 2 en el bit 2
+	SensorData[6] |= (HAL_GPIO_ReadPin(SENSOR_3_GPIO_Port, SENSOR_3_Pin)<<3);//enviamos el estado del sensor 3 en el bit 3
+
+	SensorData[7] |= HAL_GPIO_ReadPin(SENSOR_4_GPIO_Port, SENSOR_4_Pin);
+	SensorData[7] |= (HAL_GPIO_ReadPin(SENSOR_5_GPIO_Port, SENSOR_5_Pin)<<1);
+	SensorData[7] |= (HAL_GPIO_ReadPin(SENSOR_6_GPIO_Port, SENSOR_6_Pin)<<2);
+	SensorData[7] |= (HAL_GPIO_ReadPin(SENSOR_7_GPIO_Port, SENSOR_7_Pin)<<3);
+
+	read_complete = 1;
+
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if(CycleTime){
 		CycleTime--;
 	}
+	if(CycleSensor){
+		CycleSensor--;
+	}
+	/*
 	if(ChangeValueSensorTime){
 		ChangeValueSensorTime--;
-	}
+	}*/
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
