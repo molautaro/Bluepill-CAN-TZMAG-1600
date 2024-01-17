@@ -69,6 +69,8 @@ void Error_Handler(void);
 #define SENSOR_3_GPIO_Port GPIOA
 #define LED_RED_Pin GPIO_PIN_0
 #define LED_RED_GPIO_Port GPIOB
+#define LED_VERDE_Pin GPIO_PIN_12
+#define LED_VERDE_GPIO_Port GPIOB
 #define SENSOR_4_Pin GPIO_PIN_8
 #define SENSOR_4_GPIO_Port GPIOA
 #define SENSOR_5_Pin GPIO_PIN_9

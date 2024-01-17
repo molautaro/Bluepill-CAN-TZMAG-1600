@@ -162,10 +162,13 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	 if(!CycleSensor){
 		 ReadSensor();
+		 CycleSensor = 5;
 	 }
 
 	 if(!CycleTime || tx_retry){
 		 SendMessage();
+		 HAL_GPIO_TogglePin(LED_ONBOARD_GPIO_Port, LED_ONBOARD_Pin);
+
 	 }
 	 if(tx_complete){
 		 CycleTime = valueCycleTime;
