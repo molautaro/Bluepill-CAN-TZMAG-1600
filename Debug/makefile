@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (11.3.rel1)
+# Toolchain: GNU Tools for STM32 (10.3-2021.10)
 ################################################################################
 
 -include ../makefile.init
@@ -63,8 +63,8 @@ all: main-build
 main-build: CAN-TZMAG-1600-B.elf secondary-outputs
 
 # Tool invocations
-CAN-TZMAG-1600-B.elf CAN-TZMAG-1600-B.map: $(OBJS) $(USER_OBJS) C:\Users\Lauta\OneDrive\Documentos\Bluepill-CAN-TZMAG-1600\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "CAN-TZMAG-1600-B.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Lauta\OneDrive\Documentos\Bluepill-CAN-TZMAG-1600\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CAN-TZMAG-1600-B.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+CAN-TZMAG-1600-B.elf CAN-TZMAG-1600-B.map: $(OBJS) $(USER_OBJS) C:\Users\wen_c\STM32CubeIDE\workspace_1.12.1\bluepil\Bluepill-CAN-TZMAG-1600\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "CAN-TZMAG-1600-B.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\wen_c\STM32CubeIDE\workspace_1.12.1\bluepil\Bluepill-CAN-TZMAG-1600\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CAN-TZMAG-1600-B.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

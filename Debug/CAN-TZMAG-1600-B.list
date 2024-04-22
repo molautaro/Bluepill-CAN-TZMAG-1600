@@ -27,25 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00020010  2**0
                   CONTENTS, READONLY
- 12 .comment      00000043  00000000  00000000  00020039  2**0
+ 12 .debug_info   0000a59d  00000000  00000000  00020039  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_abbrev 00001c75  00000000  00000000  0002a5d6  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_aranges 00000af0  00000000  00000000  0002c250  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_ranges 00000a08  00000000  00000000  0002cd40  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_macro  00017181  00000000  00000000  0002d748  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_line   0000b958  00000000  00000000  000448c9  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_str    00086ac9  00000000  00000000  00050221  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .comment      00000050  00000000  00000000  000d6cea  2**0
                   CONTENTS, READONLY
- 13 .debug_info   00009dba  00000000  00000000  0002007c  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00001d2c  00000000  00000000  00029e36  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000af0  00000000  00000000  0002bb68  2**3
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00000860  00000000  00000000  0002c658  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  000171b1  00000000  00000000  0002ceb8  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000c071  00000000  00000000  00044069  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    00086b87  00000000  00000000  000500da  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00002ca8  00000000  00000000  000d6c64  2**2
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000069  00000000  00000000  000d990c  2**0
+ 20 .debug_frame  00002ca8  00000000  00000000  000d6d3c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -366,10 +364,10 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PAPin PAPin PAPin PAPin
                            PAPin PAPin PAPin PAPin */
-  GPIO_InitStruct.Pin = SENSOR_0_Pin|SENSOR_1_Pin|SENSOR_2_Pin|SENSOR_3_Pin
+  GPIO_InitStruct.Pin = SENSOR_3_Pin|SENSOR_2_Pin|SENSOR_1_Pin|SENSOR_0_Pin
  800030a:	f248 73f0 	movw	r3, #34800	; 0x87f0
  800030e:	613b      	str	r3, [r7, #16]
-                          |SENSOR_4_Pin|SENSOR_5_Pin|SENSOR_6_Pin|SENSOR_7_Pin;
+                          |SENSOR_7_Pin|SENSOR_6_Pin|SENSOR_5_Pin|SENSOR_4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
  8000310:	2300      	movs	r3, #0
  8000312:	617b      	str	r3, [r7, #20]
@@ -553,7 +551,7 @@ void SystemClock_Config(void)
  800041a:	2228      	movs	r2, #40	; 0x28
  800041c:	2100      	movs	r1, #0
  800041e:	4618      	mov	r0, r3
- 8000420:	f002 fbee 	bl	8002c00 <memset>
+ 8000420:	f002 fc12 	bl	8002c48 <memset>
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
  8000424:	1d3b      	adds	r3, r7, #4
  8000426:	2200      	movs	r2, #0
@@ -747,7 +745,7 @@ void ReadSensor(){
  8000542:	71da      	strb	r2, [r3, #7]
 
 	SensorData[6] |= HAL_GPIO_ReadPin(SENSOR_0_GPIO_Port, SENSOR_0_Pin);//enviamos el estado del sensor 0 en el bit 0
- 8000544:	2110      	movs	r1, #16
+ 8000544:	2180      	movs	r1, #128	; 0x80
  8000546:	483e      	ldr	r0, [pc, #248]	; (8000640 <ReadSensor+0x10c>)
  8000548:	f001 fb30 	bl	8001bac <HAL_GPIO_ReadPin>
  800054c:	4603      	mov	r3, r0
@@ -759,7 +757,7 @@ void ReadSensor(){
  8000558:	4b38      	ldr	r3, [pc, #224]	; (800063c <ReadSensor+0x108>)
  800055a:	719a      	strb	r2, [r3, #6]
 	SensorData[6] |= (HAL_GPIO_ReadPin(SENSOR_1_GPIO_Port, SENSOR_1_Pin)<<1);//enviamos el estado del sensor 1 en el bit 1
- 800055c:	2120      	movs	r1, #32
+ 800055c:	2140      	movs	r1, #64	; 0x40
  800055e:	4838      	ldr	r0, [pc, #224]	; (8000640 <ReadSensor+0x10c>)
  8000560:	f001 fb24 	bl	8001bac <HAL_GPIO_ReadPin>
  8000564:	4603      	mov	r3, r0
@@ -774,7 +772,7 @@ void ReadSensor(){
  8000576:	4b31      	ldr	r3, [pc, #196]	; (800063c <ReadSensor+0x108>)
  8000578:	719a      	strb	r2, [r3, #6]
 	SensorData[6] |= (HAL_GPIO_ReadPin(SENSOR_2_GPIO_Port, SENSOR_2_Pin)<<2);//enviamos el estado del sensor 2 en el bit 2
- 800057a:	2140      	movs	r1, #64	; 0x40
+ 800057a:	2120      	movs	r1, #32
  800057c:	4830      	ldr	r0, [pc, #192]	; (8000640 <ReadSensor+0x10c>)
  800057e:	f001 fb15 	bl	8001bac <HAL_GPIO_ReadPin>
  8000582:	4603      	mov	r3, r0
@@ -789,7 +787,7 @@ void ReadSensor(){
  8000594:	4b29      	ldr	r3, [pc, #164]	; (800063c <ReadSensor+0x108>)
  8000596:	719a      	strb	r2, [r3, #6]
 	SensorData[6] |= (HAL_GPIO_ReadPin(SENSOR_3_GPIO_Port, SENSOR_3_Pin)<<3);//enviamos el estado del sensor 3 en el bit 3
- 8000598:	2180      	movs	r1, #128	; 0x80
+ 8000598:	2110      	movs	r1, #16
  800059a:	4829      	ldr	r0, [pc, #164]	; (8000640 <ReadSensor+0x10c>)
  800059c:	f001 fb06 	bl	8001bac <HAL_GPIO_ReadPin>
  80005a0:	4603      	mov	r3, r0
@@ -805,7 +803,7 @@ void ReadSensor(){
  80005b4:	719a      	strb	r2, [r3, #6]
 
 	SensorData[7] |= HAL_GPIO_ReadPin(SENSOR_4_GPIO_Port, SENSOR_4_Pin);
- 80005b6:	f44f 7180 	mov.w	r1, #256	; 0x100
+ 80005b6:	f44f 4100 	mov.w	r1, #32768	; 0x8000
  80005ba:	4821      	ldr	r0, [pc, #132]	; (8000640 <ReadSensor+0x10c>)
  80005bc:	f001 faf6 	bl	8001bac <HAL_GPIO_ReadPin>
  80005c0:	4603      	mov	r3, r0
@@ -817,7 +815,7 @@ void ReadSensor(){
  80005cc:	4b1b      	ldr	r3, [pc, #108]	; (800063c <ReadSensor+0x108>)
  80005ce:	71da      	strb	r2, [r3, #7]
 	SensorData[7] |= (HAL_GPIO_ReadPin(SENSOR_5_GPIO_Port, SENSOR_5_Pin)<<1);
- 80005d0:	f44f 7100 	mov.w	r1, #512	; 0x200
+ 80005d0:	f44f 6180 	mov.w	r1, #1024	; 0x400
  80005d4:	481a      	ldr	r0, [pc, #104]	; (8000640 <ReadSensor+0x10c>)
  80005d6:	f001 fae9 	bl	8001bac <HAL_GPIO_ReadPin>
  80005da:	4603      	mov	r3, r0
@@ -832,7 +830,7 @@ void ReadSensor(){
  80005ec:	4b13      	ldr	r3, [pc, #76]	; (800063c <ReadSensor+0x108>)
  80005ee:	71da      	strb	r2, [r3, #7]
 	SensorData[7] |= (HAL_GPIO_ReadPin(SENSOR_6_GPIO_Port, SENSOR_6_Pin)<<2);
- 80005f0:	f44f 6180 	mov.w	r1, #1024	; 0x400
+ 80005f0:	f44f 7100 	mov.w	r1, #512	; 0x200
  80005f4:	4812      	ldr	r0, [pc, #72]	; (8000640 <ReadSensor+0x10c>)
  80005f6:	f001 fad9 	bl	8001bac <HAL_GPIO_ReadPin>
  80005fa:	4603      	mov	r3, r0
@@ -847,7 +845,7 @@ void ReadSensor(){
  800060c:	4b0b      	ldr	r3, [pc, #44]	; (800063c <ReadSensor+0x108>)
  800060e:	71da      	strb	r2, [r3, #7]
 	SensorData[7] |= (HAL_GPIO_ReadPin(SENSOR_7_GPIO_Port, SENSOR_7_Pin)<<3);
- 8000610:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000610:	f44f 7180 	mov.w	r1, #256	; 0x100
  8000614:	480a      	ldr	r0, [pc, #40]	; (8000640 <ReadSensor+0x10c>)
  8000616:	f001 fac9 	bl	8001bac <HAL_GPIO_ReadPin>
  800061a:	4603      	mov	r3, r0
@@ -1534,7 +1532,7 @@ LoopFillZerobss:
  80008e2:	f7ff ff75 	bl	80007d0 <SystemInit>
 /* Call static constructors */
     bl __libc_init_array
- 80008e6:	f002 f993 	bl	8002c10 <__libc_init_array>
+ 80008e6:	f002 f98b 	bl	8002c00 <__libc_init_array>
 /* Call the application's entry point.*/
   bl main
  80008ea:	f7ff fd37 	bl	800035c <main>
@@ -8151,45 +8149,45 @@ __weak void HAL_TIMEx_BreakCallback(TIM_HandleTypeDef *htim)
  8002bfc:	bc80      	pop	{r7}
  8002bfe:	4770      	bx	lr
 
-08002c00 <memset>:
- 8002c00:	4603      	mov	r3, r0
- 8002c02:	4402      	add	r2, r0
- 8002c04:	4293      	cmp	r3, r2
- 8002c06:	d100      	bne.n	8002c0a <memset+0xa>
- 8002c08:	4770      	bx	lr
- 8002c0a:	f803 1b01 	strb.w	r1, [r3], #1
- 8002c0e:	e7f9      	b.n	8002c04 <memset+0x4>
+08002c00 <__libc_init_array>:
+ 8002c00:	b570      	push	{r4, r5, r6, lr}
+ 8002c02:	2600      	movs	r6, #0
+ 8002c04:	4d0c      	ldr	r5, [pc, #48]	; (8002c38 <__libc_init_array+0x38>)
+ 8002c06:	4c0d      	ldr	r4, [pc, #52]	; (8002c3c <__libc_init_array+0x3c>)
+ 8002c08:	1b64      	subs	r4, r4, r5
+ 8002c0a:	10a4      	asrs	r4, r4, #2
+ 8002c0c:	42a6      	cmp	r6, r4
+ 8002c0e:	d109      	bne.n	8002c24 <__libc_init_array+0x24>
+ 8002c10:	f000 f822 	bl	8002c58 <_init>
+ 8002c14:	2600      	movs	r6, #0
+ 8002c16:	4d0a      	ldr	r5, [pc, #40]	; (8002c40 <__libc_init_array+0x40>)
+ 8002c18:	4c0a      	ldr	r4, [pc, #40]	; (8002c44 <__libc_init_array+0x44>)
+ 8002c1a:	1b64      	subs	r4, r4, r5
+ 8002c1c:	10a4      	asrs	r4, r4, #2
+ 8002c1e:	42a6      	cmp	r6, r4
+ 8002c20:	d105      	bne.n	8002c2e <__libc_init_array+0x2e>
+ 8002c22:	bd70      	pop	{r4, r5, r6, pc}
+ 8002c24:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8002c28:	4798      	blx	r3
+ 8002c2a:	3601      	adds	r6, #1
+ 8002c2c:	e7ee      	b.n	8002c0c <__libc_init_array+0xc>
+ 8002c2e:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8002c32:	4798      	blx	r3
+ 8002c34:	3601      	adds	r6, #1
+ 8002c36:	e7f2      	b.n	8002c1e <__libc_init_array+0x1e>
+ 8002c38:	08002c90 	.word	0x08002c90
+ 8002c3c:	08002c90 	.word	0x08002c90
+ 8002c40:	08002c90 	.word	0x08002c90
+ 8002c44:	08002c94 	.word	0x08002c94
 
-08002c10 <__libc_init_array>:
- 8002c10:	b570      	push	{r4, r5, r6, lr}
- 8002c12:	2600      	movs	r6, #0
- 8002c14:	4d0c      	ldr	r5, [pc, #48]	; (8002c48 <__libc_init_array+0x38>)
- 8002c16:	4c0d      	ldr	r4, [pc, #52]	; (8002c4c <__libc_init_array+0x3c>)
- 8002c18:	1b64      	subs	r4, r4, r5
- 8002c1a:	10a4      	asrs	r4, r4, #2
- 8002c1c:	42a6      	cmp	r6, r4
- 8002c1e:	d109      	bne.n	8002c34 <__libc_init_array+0x24>
- 8002c20:	f000 f81a 	bl	8002c58 <_init>
- 8002c24:	2600      	movs	r6, #0
- 8002c26:	4d0a      	ldr	r5, [pc, #40]	; (8002c50 <__libc_init_array+0x40>)
- 8002c28:	4c0a      	ldr	r4, [pc, #40]	; (8002c54 <__libc_init_array+0x44>)
- 8002c2a:	1b64      	subs	r4, r4, r5
- 8002c2c:	10a4      	asrs	r4, r4, #2
- 8002c2e:	42a6      	cmp	r6, r4
- 8002c30:	d105      	bne.n	8002c3e <__libc_init_array+0x2e>
- 8002c32:	bd70      	pop	{r4, r5, r6, pc}
- 8002c34:	f855 3b04 	ldr.w	r3, [r5], #4
- 8002c38:	4798      	blx	r3
- 8002c3a:	3601      	adds	r6, #1
- 8002c3c:	e7ee      	b.n	8002c1c <__libc_init_array+0xc>
- 8002c3e:	f855 3b04 	ldr.w	r3, [r5], #4
- 8002c42:	4798      	blx	r3
- 8002c44:	3601      	adds	r6, #1
- 8002c46:	e7f2      	b.n	8002c2e <__libc_init_array+0x1e>
- 8002c48:	08002c90 	.word	0x08002c90
- 8002c4c:	08002c90 	.word	0x08002c90
- 8002c50:	08002c90 	.word	0x08002c90
- 8002c54:	08002c94 	.word	0x08002c94
+08002c48 <memset>:
+ 8002c48:	4603      	mov	r3, r0
+ 8002c4a:	4402      	add	r2, r0
+ 8002c4c:	4293      	cmp	r3, r2
+ 8002c4e:	d100      	bne.n	8002c52 <memset+0xa>
+ 8002c50:	4770      	bx	lr
+ 8002c52:	f803 1b01 	strb.w	r1, [r3], #1
+ 8002c56:	e7f9      	b.n	8002c4c <memset+0x4>
 
 08002c58 <_init>:
  8002c58:	b5f8      	push	{r3, r4, r5, r6, r7, lr}

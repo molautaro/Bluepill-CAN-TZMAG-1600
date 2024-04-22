@@ -65,8 +65,8 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PAPin PAPin PAPin PAPin
                            PAPin PAPin PAPin PAPin */
-  GPIO_InitStruct.Pin = SENSOR_0_Pin|SENSOR_1_Pin|SENSOR_2_Pin|SENSOR_3_Pin
-                          |SENSOR_4_Pin|SENSOR_5_Pin|SENSOR_6_Pin|SENSOR_7_Pin;
+  GPIO_InitStruct.Pin = SENSOR_3_Pin|SENSOR_2_Pin|SENSOR_1_Pin|SENSOR_0_Pin
+                          |SENSOR_7_Pin|SENSOR_6_Pin|SENSOR_5_Pin|SENSOR_4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
